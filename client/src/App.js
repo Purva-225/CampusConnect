@@ -1,8 +1,9 @@
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import Home from './pages/Home';
-import PrepHub from './pages/PrepHub';
-import Resume from './pages/Resume';
+import PrepHub from './pages/PrepHub.js';
+import Resume from './pages/Resume.js';
 import Mentors from './pages/Mentors';
+import Login from './pages/Login';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
             <li><Link to="/prep-hub" style={{color: 'white', textDecoration: 'none'}}>Prep Hub</Link></li>
             <li><Link to="/resume" style={{color: 'white', textDecoration: 'none'}}>Resume</Link></li>
             <li><Link to="/mentors" style={{color: 'white', textDecoration: 'none'}}>Mentors</Link></li>
+            <li><Link to="/login" style={{color: '#4ade80', textDecoration: 'none', fontWeight: 'bold'}}>Login</Link></li>
           </ul>
         </nav>
 
@@ -26,6 +28,7 @@ function App() {
           <Route path="/prep-hub" element={<PrepHub />} />
           <Route path="/resume" element={<Resume />} />
           <Route path="/mentors" element={<Mentors />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
 
         {/* Footer */}
