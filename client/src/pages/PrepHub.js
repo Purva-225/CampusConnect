@@ -11,10 +11,12 @@ function PrepHub() {
     { company: 'Amazon', type: 'HR', question: 'Tell me about a time you showed leadership' },
     { company: 'Google', type: 'DSA', question: 'Implement LRU Cache' },
     { company: 'Infosys', type: 'HR', question: 'Where do you see yourself in 5 years?' },
+    { company: 'cognizant', type: 'DSA', question: 'Merge Sorted Array: Merge two sorted arrays `nums1` and `nums2` into `nums1` in non-decreasing order, where `nums1` has extra space to hold all elements'},
+
   ];
 
   return (
-    <div style={{backgroundColor: '#0f172a', color: 'white', minHeight: '100vh', padding: '40px'}}>
+    <div style={{backgroundColor: 'transparent', color: 'white', minHeight: '100vh', padding: '40px'}}>
       
       <h1 style={{fontSize: '2.5rem', fontWeight: 'bold', color: '#4ade80'}}>Placement Prep Hub</h1>
       <p style={{color: '#94a3b8', marginTop: '8px', marginBottom: '32px'}}>DSA, Aptitude and HR questions filtered by company</p>

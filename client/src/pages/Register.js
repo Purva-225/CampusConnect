@@ -23,8 +23,8 @@ function Register() {
   };
 
   return (
-    <div style={{backgroundColor: '#0f172a', color: 'white', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-      <div style={{backgroundColor: '#1e293b', padding: '40px', borderRadius: '16px', width: '100%', maxWidth: '400px'}}>
+    <div style={{backgroundColor: 'transparent', color: 'white', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+      <div style={{backgroundColor: 'transparent', padding: '40px', borderRadius: '16px', width: '100%', maxWidth: '400px'}}>
         
         <h2 style={{fontSize: '2rem', fontWeight: 'bold', textAlign: 'center', color: '#4ade80'}}>Create Account</h2>
         <p style={{color: '#94a3b8', textAlign: 'center', marginTop: '8px'}}>Join CampusConnect today</p>

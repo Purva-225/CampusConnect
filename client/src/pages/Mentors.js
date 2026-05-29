@@ -10,7 +10,7 @@ function Mentors() {
   ];
 
   return (
-    <div style={{backgroundColor: '#0f172a', color: 'white', minHeight: '100vh', padding: '40px'}}>
+    <div style={{backgroundColor: 'transparent', color: 'white', minHeight: '100vh', padding: '40px'}}>
       
       <h1 style={{fontSize: '2.5rem', fontWeight: 'bold', color: '#4ade80'}}>Senior Mentor Connect</h1>
       <p style={{color: '#94a3b8', marginTop: '8px', marginBottom: '40px'}}>Connect with placed seniors for guidance and resume reviews</p>
