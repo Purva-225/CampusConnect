@@ -4,6 +4,7 @@ import PrepHub from './pages/PrepHub.js';
 import Resume from './pages/Resume.js';
 import Mentors from './pages/Mentors';
 import Login from './pages/Login';
+import Register from './pages/Register';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           <Route path="/resume" element={<Resume />} />
           <Route path="/mentors" element={<Mentors />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
 
         {/* Footer */}
