@@ -24,7 +24,7 @@ const verifyToken = (req, res, next) => {
 router.post('/analyze', verifyToken, upload.single('resume'), async (req, res) => {
   try {
     const { company } = req.body;
-  const pdfData = await pdf(req.file.buffer);
+   const pdfData = await pdfParse(req.file.buffer);
     const resumeText = pdfData.text;
 
     const previousResume = await Resume.findOne({ userId: req.userId }).sort({ uploadedAt: -1 });
