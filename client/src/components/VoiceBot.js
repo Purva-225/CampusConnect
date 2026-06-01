@@ -9,12 +9,13 @@ function VoiceBot() {
   const [speechBubble, setSpeechBubble] = useState('Hi! Click me! 👋');
   const [messages, setMessages] = useState([]);
   const [blink, setBlink] = useState(false);
-  const [mood, setMood] = useState('happy'); // happy, thinking, talking
+  const [mood, setMood] = useState('happy');
   const [pos, setPos] = useState({ x: window.innerWidth - 130, y: window.innerHeight - 180 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [targetPos, setTargetPos] = useState({ x: window.innerWidth - 130, y: window.innerHeight - 180 });
   const [moving, setMoving] = useState(false);
+  const dragMovedRef = useRef(false);
 
   const recognitionRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -46,7 +47,7 @@ function VoiceBot() {
       setTimeout(() => setMoving(false), 8000);
     };
     pickTarget();
-    const interval = setInterval(pickTarget, 3 * 60 * 1000); // every 3 minutes
+    const interval = setInterval(pickTarget, 3 * 60 * 1000);
     return () => clearInterval(interval);
   }, [isOpen]);
 
@@ -75,15 +76,16 @@ function VoiceBot() {
   // Drag
   const onMouseDown = (e) => {
     if (e.target.closest('button') || e.target.closest('.panel')) return;
+    dragMovedRef.current = false;
     setIsDragging(true);
     setDragOffset({ x: e.clientX - posRef.current.x, y: e.clientY - posRef.current.y });
     e.preventDefault();
-    e.stopPropagation();
   };
 
   useEffect(() => {
     const onMove = (e) => {
       if (!isDraggingRef.current) return;
+      dragMovedRef.current = true;
       const nx = e.clientX - dragOffset.x;
       const ny = e.clientY - dragOffset.y;
       const cx = Math.max(0, Math.min(window.innerWidth - 80, nx));
@@ -94,6 +96,10 @@ function VoiceBot() {
       if (isDraggingRef.current) {
         setIsDragging(false);
         setTargetPos(posRef.current);
+        // If barely moved, treat as click
+        if (!dragMovedRef.current) {
+          setIsOpen(o => !o);
+        }
       }
     };
     window.addEventListener('mousemove', onMove);
@@ -188,7 +194,6 @@ function VoiceBot() {
   };
   const stopListening = () => { if (recognitionRef.current) recognitionRef.current.stop(); setIsListening(false); setMood('happy'); };
 
-  // Pink 3D Robot SVG
   const Robot = () => {
     const armSwing = moving ? 'rotate(-20 14 58)' : 'rotate(0 14 58)';
     return (
@@ -218,94 +223,53 @@ function VoiceBot() {
             <stop offset="100%" stopColor="#ff4da6" stopOpacity="0.2"/>
           </radialGradient>
         </defs>
-
-        {/* Shadow */}
         <ellipse cx="38" cy="95" rx="20" ry="4" fill="rgba(200,0,80,0.18)"/>
-
-        {/* Ear bumps */}
         <circle cx="10" cy="36" r="7" fill="url(#pinkDark)" stroke="#880033" strokeWidth="0.8"/>
         <circle cx="10" cy="36" r="4" fill="url(#pinkHead)"/>
         <circle cx="66" cy="36" r="7" fill="url(#pinkDark)" stroke="#880033" strokeWidth="0.8"/>
         <circle cx="66" cy="36" r="4" fill="url(#pinkHead)"/>
-
-        {/* Head */}
         <ellipse cx="38" cy="32" rx="24" ry="22" fill="url(#pinkHead)" stroke="#cc0066" strokeWidth="0.8"/>
-        {/* Head shine */}
         <ellipse cx="30" cy="18" rx="9" ry="5" fill="white" opacity="0.35" transform="rotate(-20 30 18)"/>
-        {/* Head line detail */}
-        <path d="M20 24 Q38 20 56 24" stroke="#cc006644" strokeWidth="0.8" fill="none"/>
-
-        {/* Big cute eyes */}
-        <ellipse cx="28" cy="33" rx={blink ? 7 : 7} ry={blink ? 0.5 : 9} fill="#0a0020"/>
-        <ellipse cx="48" cy="33" rx={blink ? 7 : 7} ry={blink ? 0.5 : 9} fill="#0a0020"/>
+        <ellipse cx="28" cy="33" rx="7" ry={blink ? 0.5 : 9} fill="#0a0020"/>
+        <ellipse cx="48" cy="33" rx="7" ry={blink ? 0.5 : 9} fill="#0a0020"/>
         {!blink && <>
-          {/* Eye color */}
           <ellipse cx="28" cy="34" rx="5.5" ry="7" fill="url(#eyeBlue)"/>
           <ellipse cx="48" cy="34" rx="5.5" ry="7" fill="url(#eyeBlue)"/>
-          {/* Eye shine big */}
           <circle cx="25" cy="29" r="2.5" fill="white" opacity="0.95"/>
           <circle cx="45" cy="29" r="2.5" fill="white" opacity="0.95"/>
-          {/* Eye shine small */}
           <circle cx="31" cy="37" r="1.2" fill="white" opacity="0.6"/>
           <circle cx="51" cy="37" r="1.2" fill="white" opacity="0.6"/>
         </>}
-
-        {/* Eyebrows */}
         {mood === 'thinking'
           ? <><path d="M21 22 Q28 19 34 22" stroke="#880044" strokeWidth="1.8" fill="none" strokeLinecap="round"/>
              <path d="M42 22 Q48 19 55 22" stroke="#880044" strokeWidth="1.8" fill="none" strokeLinecap="round"/></>
           : <><path d="M21 23 Q28 21 34 23" stroke="#880044" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
              <path d="M42 23 Q48 21 55 23" stroke="#880044" strokeWidth="1.5" fill="none" strokeLinecap="round"/></>
         }
-
-        {/* Cheeks blush */}
         <ellipse cx="17" cy="40" rx="6" ry="4" fill="url(#cheek)"/>
         <ellipse cx="59" cy="40" rx="6" ry="4" fill="url(#cheek)"/>
-
-        {/* Mouth */}
         {isSpeaking
           ? <ellipse cx="38" cy="47" rx="6" ry="3.5" fill="#880033" stroke="#cc0055" strokeWidth="0.5"/>
           : mood === 'thinking'
           ? <path d="M32 47 Q38 45 44 47" stroke="#880033" strokeWidth="2" fill="none" strokeLinecap="round"/>
           : <path d="M31 46 Q38 52 45 46" stroke="#880033" strokeWidth="2" fill="none" strokeLinecap="round"/>
         }
-
-        {/* Neck */}
         <rect x="32" y="53" width="12" height="6" rx="3" fill="url(#pinkDark)" stroke="#880033" strokeWidth="0.5"/>
-
-        {/* Body */}
         <ellipse cx="38" cy="74" rx="20" ry="22" fill="url(#pinkBody)" stroke="#cc0066" strokeWidth="0.8"/>
-        {/* Body shine */}
         <ellipse cx="29" cy="63" rx="7" ry="5" fill="white" opacity="0.3" transform="rotate(-15 29 63)"/>
-
-        {/* Heart on chest */}
         <path d="M33 70 C33 67.5 30 67 30 70 C30 72.5 33 74.5 38 77 C43 74.5 46 72.5 46 70 C46 67 43 67.5 43 70 C43 67.5 38 65 33 70Z"
           fill={isListening ? "#ffccdd" : isSpeaking ? "#ff80b5" : "#ff4d8888"} stroke="#cc005555" strokeWidth="0.5"/>
-        {/* Heart shine */}
-        <ellipse cx="34" cy="69" rx="2" ry="1.2" fill="white" opacity="0.5" transform="rotate(-30 34 69)"/>
-
-        {/* Left arm */}
         <ellipse cx="14" cy="70" rx="6" ry="13" fill="url(#pinkBody)" stroke="#cc0066" strokeWidth="0.7" transform={armSwing}/>
-        <ellipse cx="14" cy="70" rx="3" ry="6" fill="white" opacity="0.2" transform={armSwing}/>
         <circle cx="12" cy="82" r="6" fill="url(#pinkDark)" stroke="#880033" strokeWidth="0.7"/>
         <circle cx="12" cy="82" r="3" fill="url(#pinkBody)"/>
-
-        {/* Right arm - wave when speaking */}
         <ellipse cx="62" cy="68" rx="6" ry="13" fill="url(#pinkBody)" stroke="#cc0066" strokeWidth="0.7"
-          transform={isSpeaking ? "rotate(30 62 68)" : "rotate(15 62 68)"}/>
-        <ellipse cx="62" cy="68" rx="3" ry="6" fill="white" opacity="0.2"
           transform={isSpeaking ? "rotate(30 62 68)" : "rotate(15 62 68)"}/>
         <circle cx="66" cy="80" r="6" fill="url(#pinkDark)" stroke="#880033" strokeWidth="0.7"/>
         <circle cx="66" cy="80" r="3" fill="url(#pinkBody)"/>
-
-        {/* Legs */}
         <rect x="25" y="92" width="11" height="6" rx="5.5" fill="url(#pinkDark)" stroke="#880033" strokeWidth="0.7"/>
         <rect x="40" y="92" width="11" height="6" rx="5.5" fill="url(#pinkDark)" stroke="#880033" strokeWidth="0.7"/>
-        {/* Feet */}
         <ellipse cx="30.5" cy="97" rx="9" ry="4" fill="url(#pinkDark)" stroke="#880033" strokeWidth="0.7"/>
         <ellipse cx="45.5" cy="97" rx="9" ry="4" fill="url(#pinkDark)" stroke="#880033" strokeWidth="0.7"/>
-        <ellipse cx="28" cy="95.5" rx="4" ry="1.5" fill="white" opacity="0.35"/>
-        <ellipse cx="43" cy="95.5" rx="4" ry="1.5" fill="white" opacity="0.35"/>
       </svg>
     );
   };
@@ -320,19 +284,17 @@ function VoiceBot() {
 
       <div style={{ position: 'fixed', left: pos.x, top: pos.y, zIndex: 9999, userSelect: 'none', touchAction: 'none' }}>
 
-        {/* Speech bubble */}
         {speechBubble && (
           <div style={{
             position: 'absolute', bottom: '105px',
             [bubbleLeft ? 'right' : 'left']: '-5px',
             backgroundColor: 'white', borderRadius: '20px',
             padding: '10px 14px', maxWidth: '210px', minWidth: '90px',
-            boxShadow: '0 4px 20px rgba(255,77,148,0.25), 0 1px 4px rgba(0,0,0,0.1)',
+            boxShadow: '0 4px 20px rgba(255,77,148,0.25)',
             border: '1.5px solid #ffb3d9',
-            animation: 'bubblePop 0.3s cubic-bezier(0.34,1.56,0.64,1)',
-            pointerEvents: 'none'
+            pointerEvents: 'none', zIndex: 2
           }}>
-            <p style={{ color: '#880033', fontSize: '0.78rem', lineHeight: '1.5', margin: 0, fontFamily: 'system-ui,sans-serif', fontWeight: '500' }}>
+            <p style={{ color: '#880033', fontSize: '0.78rem', lineHeight: '1.5', margin: 0, fontWeight: '500' }}>
               {speechBubble.substring(0, 120)}{speechBubble.length > 120 ? '...' : ''}
             </p>
             <div style={{
@@ -352,7 +314,6 @@ function VoiceBot() {
           </div>
         )}
 
-        {/* Listening transcript */}
         {isListening && transcript && (
           <div style={{
             position: 'absolute', bottom: '170px',
@@ -364,19 +325,17 @@ function VoiceBot() {
           }}>🎙️ {transcript}</div>
         )}
 
-        {/* Robot - draggable */}
+        {/* Robot */}
         <div
           onMouseDown={onMouseDown}
-          onClick={(e) => { if (!isDragging) { e.stopPropagation(); setIsOpen(o => !o); } }}
           style={{
-            cursor: isDragging ? 'grabbing' : 'grab',
+            cursor: isDragging ? 'grabbing' : 'pointer',
             animation: isSpeaking ? 'robotTalk 0.3s ease-in-out infinite' : moving ? 'robotWalk 0.5s ease-in-out infinite' : 'robotBob 2.5s ease-in-out infinite',
             display: 'inline-block'
           }}>
           <Robot />
         </div>
 
-        {/* Controls */}
         {isOpen && (
           <div className="panel" style={{ marginTop: '6px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
             <button onClick={isListening ? stopListening : startListening}
@@ -388,7 +347,6 @@ function VoiceBot() {
               }}>
               {isListening ? '⏹' : '🎙️'}
             </button>
-
             <div style={{
               backgroundColor: 'white', borderRadius: '16px', padding: '10px 12px',
               boxShadow: '0 4px 20px rgba(255,77,148,0.2)', border: '1.5px solid #ffb3d9',
