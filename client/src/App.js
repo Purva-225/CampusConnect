@@ -8,6 +8,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import DoubtSolver from './pages/DoubtSolver';
 import VoiceBot from './components/VoiceBot';
+import Roadmap from './pages/Roadmap';
 
 function AnimatedBackground() {
   const canvasRef = useRef(null);
@@ -85,6 +86,7 @@ function App() {
             <li><Link to="/prep-hub" style={{color: 'white', textDecoration: 'none'}}>Prep Hub</Link></li>
             <li><Link to="/resume" style={{color: 'white', textDecoration: 'none'}}>Resume</Link></li>
             <li><Link to="/mentors" style={{color: 'white', textDecoration: 'none'}}>Mentors</Link></li>
+            <li><Link to="/roadmap" style={{color:'white', textDecoration:'none'}}>Roadmap</Link></li>
             <li><Link to="/doubt-solver" style={{color: 'white', textDecoration: 'none'}}>Doubt Solver</Link></li>
             <li><Link to="/login" style={{color: '#4ade80', textDecoration: 'none', fontWeight: 'bold'}}>Login</Link></li>
           </ul>
@@ -99,6 +101,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/doubt-solver" element={<DoubtSolver />} />
+            <Route path="/roadmap" element={<Roadmap />} />
           </Routes>
         </div>
 
