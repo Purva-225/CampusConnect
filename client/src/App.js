@@ -87,8 +87,8 @@ function App() {
             <li><Link to="/prep-hub" style={{color: 'white', textDecoration: 'none'}}>Prep Hub</Link></li>
             <li><Link to="/resume" style={{color: 'white', textDecoration: 'none'}}>Resume</Link></li>
             <li><Link to="/mentors" style={{color: 'white', textDecoration: 'none'}}>Mentors</Link></li>
-            <li><Link to="/login" style={{color: '#4ade80', textDecoration: 'none', fontWeight: 'bold'}}>Login</Link></li>
             <li><Link to="/doubt-solver" style={{color: 'white', textDecoration: 'none'}}>Doubt Solver</Link></li>
+            <li><Link to="/login" style={{color: '#4ade80', textDecoration: 'none', fontWeight: 'bold'}}>Login</Link></li>
           </ul>
         </nav>
 
