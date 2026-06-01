@@ -7,6 +7,7 @@ import Mentors from './pages/Mentors';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import DoubtSolver from './pages/DoubtSolver';
+import VoiceBot from './components/VoiceBot';
 
 function AnimatedBackground() {
   const canvasRef = useRef(null);
@@ -106,7 +107,7 @@ function App() {
           <p style={{marginTop: '8px', fontSize: '0.9rem'}}>Built for Indian students by Indian students</p>
           <p style={{marginTop: '16px', fontSize: '0.8rem'}}>© 2026 CampusConnect. Open Source under MIT License.</p>
         </footer>
-
+        <VoiceBot />
       </div>
     </BrowserRouter>
   );
