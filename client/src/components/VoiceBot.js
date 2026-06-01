@@ -28,12 +28,23 @@ function VoiceBot() {
   const speak = (text, callback) => {
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 0.95;
-    utterance.pitch = 1.3;
+   utterance.rate = 0.85;
+utterance.pitch = 1.4;
     utterance.volume = 1;
     const voices = window.speechSynthesis.getVoices();
-    const femaleVoice = voices.find(v => v.name.includes('Female') || v.name.includes('Samantha') || v.name.includes('Google UK English Female') || v.name.includes('Zira'));
-    if (femaleVoice) utterance.voice = femaleVoice;
+   const preferred = [
+  'Google UK English Female',
+  'Samantha',
+  'Karen',
+  'Moira',
+  'Tessa',
+  'Veena',
+  'Google US English',
+  'Microsoft Zira',
+];
+const femaleVoice = preferred.reduce((found, name) =>
+  found || voices.find(v => v.name.includes(name)), null);
+if (femaleVoice) utterance.voice = femaleVoice;
     utterance.onstart = () => setIsSpeaking(true);
     utterance.onend = () => {
       setIsSpeaking(false);
