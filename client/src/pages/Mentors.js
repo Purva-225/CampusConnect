@@ -134,18 +134,17 @@ function Mentors() {
     setUserInput('');
     setLoading(true);
     try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          system: `You are an AI assistant for mentor ${selectedMentor.name} who works as ${selectedMentor.role} at ${selectedMentor.company}. They studied at ${selectedMentor.college} and their skills include ${selectedMentor.skills.join(', ')}. Journey: ${selectedMentor.journey}. Answer questions about their journey, tips, and advice briefly and motivatingly for Indian college students.`,
-          messages: [{ role: 'user', content: userInput }]
-        })
-      });
-      const data = await response.json();
-      setMessages([...newMessages, { role: 'assistant', text: data.content[0].text }]);
+      const response = await fetch('https://campusconnect-b7wn.onrender.com/api/resume/mentor-chat', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    mentorName: selectedMentor.name,
+    mentorInfo: selectedMentor.journey,
+    userMessage: userInput
+  })
+});
+const data = await response.json();
+setMessages([...newMessages, { role: 'assistant', text: data.reply }]);
     } catch {
       setMessages([...newMessages, { role: 'assistant', text: 'Sorry, something went wrong. Please try again!' }]);
     }

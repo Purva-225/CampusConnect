@@ -85,4 +85,24 @@ Respond ONLY with this exact JSON format, no other text:
   }
 });
 
+router.post('/mentor-chat', async (req, res) => {
+  const { mentorName, mentorInfo, userMessage } = req.body;
+  try {
+    const response = await groq.chat.completions.create({
+      messages: [
+        { 
+          role: 'system', 
+          content: `You are an AI assistant for mentor ${mentorName}. Background: ${mentorInfo}. Answer briefly and motivatingly for Indian college students.` 
+        },
+        { role: 'user', content: userMessage }
+      ],
+      model: 'llama-3.3-70b-versatile',
+      temperature: 0.5,
+    });
+    res.json({ reply: response.choices[0].message.content });
+  } catch (err) {
+    res.status(500).json({ message: 'AI error' });
+  }
+});
+
 module.exports = router;
