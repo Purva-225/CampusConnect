@@ -24,7 +24,7 @@ const verifyToken = (req, res, next) => {
 router.post('/analyze', verifyToken, upload.single('resume'), async (req, res) => {
   try {
     const { company } = req.body;
-   const pdfData = await pdfParse(req.file.buffer);
+    const pdfData = await pdfParse(req.file.buffer);
     const resumeText = pdfData.text;
 
     const previousResume = await Resume.findOne({ userId: req.userId }).sort({ uploadedAt: -1 });
@@ -90,9 +90,9 @@ router.post('/mentor-chat', async (req, res) => {
   try {
     const response = await groq.chat.completions.create({
       messages: [
-        { 
-          role: 'system', 
-          content: `You are an AI assistant for mentor ${mentorName}. Background: ${mentorInfo}. Answer briefly and motivatingly for Indian college students.` 
+        {
+          role: 'system',
+          content: `You are an AI assistant for mentor ${mentorName}. Background: ${mentorInfo}. Answer briefly and motivatingly for Indian college students.`
         },
         { role: 'user', content: userMessage }
       ],
@@ -108,34 +108,8 @@ router.post('/mentor-chat', async (req, res) => {
 router.post('/doubt-solver', async (req, res) => {
   const { userMessage, resumeContext } = req.body;
   try {
-    const systemPrompt = `You are an expert AI assistant for Indian college students preparing for placements. You help with:
-1. DSA problems - explain approach, time/space complexity, code examples
-2. Career roadmaps - what to learn, in what order
-3. Latest tech news - AI, LLMs, Nvidia, industry updates
-4. Company-specific prep - what Google, Amazon, Microsoft etc look for
-5. Interview tips - HR, technical, behavioral questions
-6. Resume-based suggestions - if resume is provided, give personalized advice
-${resumeContext ? `\nStudent's Resume:\n${resumeContext}\nGive personalized suggestions based on this resume.` : ''}
-Be concise, practical and motivating for Indian students.`;
+    const systemPrompt = `You are CampBot, a friendly and intelligent AI assistant like ChatGPT. You can answer ANYTHING — general knowledge, science, history, jokes, fun facts, coding, math, movies, sports, nonsense questions, creative writing, placement prep, DSA problems, career guidance, or anything else. Be conversational, warm and engaging. Never say you cannot answer — always try your best.${resumeContext ? `\nStudent Resume:\n${resumeContext}\nAlso give personalized suggestions based on this resume when relevant.` : ''} Keep answers concise and helpful.`;
 
-    const response = await groq.chat.completions.create({
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userMessage }
-      ],
-      model: 'llama-3.3-70b-versatile',
-      temperature: 0.7,
-    });
-    res.json({ reply: response.choices[0].message.content });
-  } catch (err) {
-    res.status(500).json({ message: 'AI error' });
-  }
-});
-
-router.post('/doubt-solver', async (req, res) => {
-  const { userMessage, resumeContext } = req.body;
-  try {
-    const systemPrompt = `You are an expert AI assistant for Indian college students preparing for placements. You help with DSA problems, career roadmaps, latest tech news (AI, LLMs, Nvidia), company-specific prep, interview tips, and resume-based personalized suggestions.${resumeContext ? `\nStudent Resume:\n${resumeContext}\nGive personalized suggestions.` : ''} Be concise, practical and motivating.`;
     const response = await groq.chat.completions.create({
       messages: [
         { role: 'system', content: systemPrompt },
