@@ -4,9 +4,10 @@ import Home from './pages/Home';
 import PrepHub from './pages/PrepHub';
 import Resume from './pages/Resume';
 import Mentors from './pages/Mentors';
+import DoubtSolver from './pages/DoubtSolver';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import DoubtSolver from './pages/DoubtSolver';
+
 
 function AnimatedBackground() {
   const canvasRef = useRef(null);

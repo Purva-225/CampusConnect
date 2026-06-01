@@ -105,4 +105,49 @@ router.post('/mentor-chat', async (req, res) => {
   }
 });
 
+router.post('/doubt-solver', async (req, res) => {
+  const { userMessage, resumeContext } = req.body;
+  try {
+    const systemPrompt = `You are an expert AI assistant for Indian college students preparing for placements. You help with:
+1. DSA problems - explain approach, time/space complexity, code examples
+2. Career roadmaps - what to learn, in what order
+3. Latest tech news - AI, LLMs, Nvidia, industry updates
+4. Company-specific prep - what Google, Amazon, Microsoft etc look for
+5. Interview tips - HR, technical, behavioral questions
+6. Resume-based suggestions - if resume is provided, give personalized advice
+${resumeContext ? `\nStudent's Resume:\n${resumeContext}\nGive personalized suggestions based on this resume.` : ''}
+Be concise, practical and motivating for Indian students.`;
+
+    const response = await groq.chat.completions.create({
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userMessage }
+      ],
+      model: 'llama-3.3-70b-versatile',
+      temperature: 0.7,
+    });
+    res.json({ reply: response.choices[0].message.content });
+  } catch (err) {
+    res.status(500).json({ message: 'AI error' });
+  }
+});
+
+router.post('/doubt-solver', async (req, res) => {
+  const { userMessage, resumeContext } = req.body;
+  try {
+    const systemPrompt = `You are an expert AI assistant for Indian college students preparing for placements. You help with DSA problems, career roadmaps, latest tech news (AI, LLMs, Nvidia), company-specific prep, interview tips, and resume-based personalized suggestions.${resumeContext ? `\nStudent Resume:\n${resumeContext}\nGive personalized suggestions.` : ''} Be concise, practical and motivating.`;
+    const response = await groq.chat.completions.create({
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userMessage }
+      ],
+      model: 'llama-3.3-70b-versatile',
+      temperature: 0.7,
+    });
+    res.json({ reply: response.choices[0].message.content });
+  } catch (err) {
+    res.status(500).json({ message: 'AI error' });
+  }
+});
+
 module.exports = router;
