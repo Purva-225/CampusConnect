@@ -55,7 +55,7 @@ function PrepHub() {
     if (popupDismissed) return;
     const timer = setTimeout(() => {
       setShowPopup(true);
-    }, 5 * 60 * 1000);
+    }, 1000);
     return () => clearTimeout(timer);
   }, [popupDismissed]);
 
