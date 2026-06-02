@@ -4,6 +4,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const authRoutes = require('./routes/auth');
+const resumeRoutes = require('./routes/resume');
 
 const app = express();
 
@@ -14,8 +15,10 @@ app.get('/', (req, res) => {
   res.json({ message: 'CampusConnect API is running!' });
 });
 
+// Health check route
+app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
+
 app.use('/api/auth', authRoutes);
-const resumeRoutes = require('./routes/resume');
 app.use('/api/resume', resumeRoutes);
 const mentorRoutes = require('./routes/mentor');
 app.use('/api', mentorRoutes);
@@ -23,8 +26,13 @@ app.use('/api', mentorRoutes);
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('MongoDB connected!');
-   app.listen(process.env.PORT || 5000, () => {
+    app.listen(process.env.PORT || 5000, () => {
       console.log('Server running on port 5000');
     });
+    // Keep Render awake - ping every 14 minutes
+    setInterval(() => {
+      fetch('https://campusconnect-b7wn.onrender.com/api/health')
+        .catch(() => {});
+    }, 14 * 60 * 1000);
   })
   .catch(err => console.log(err));

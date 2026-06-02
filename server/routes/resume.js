@@ -1,11 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const pdfParse = require('pdf-parse');
+const pdfParse = require('pdf-parse/lib/pdf-parse.js');
 const Resume = require('../models/Resume');
 const jwt = require('jsonwebtoken');
+const Groq = require('groq-sdk');
 
 const upload = multer({ storage: multer.memoryStorage() });
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 const verifyToken = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
@@ -19,60 +21,6 @@ const verifyToken = (req, res, next) => {
   }
 };
 
-function analyzeResume(text, company) {
-  const lowerText = text.toLowerCase();
-  let score = 50;
-  const strengths = [];
-  const improvements = [];
-  const companyTips = [];
-
-  if (lowerText.includes('project')) { score += 10; strengths.push('Has projects section'); }
-  if (lowerText.includes('experience')) { score += 10; strengths.push('Work experience included'); }
-  if (lowerText.includes('education')) { score += 5; strengths.push('Education details present'); }
-  if (lowerText.includes('skill')) { score += 5; strengths.push('Skills section found'); }
-  if (lowerText.includes('achievement') || lowerText.includes('award')) { score += 5; strengths.push('Achievements mentioned'); }
-  if (lowerText.includes('github') || lowerText.includes('linkedin')) { score += 5; strengths.push('Online presence included'); }
-
-  if (!lowerText.includes('quantif') && !lowerText.includes('%') && !lowerText.includes('increased')) {
-    improvements.push('Add quantifiable achievements (e.g. improved performance by 30%)');
-    score -= 5;
-  }
-  if (text.length < 500) { improvements.push('Resume is too short — add more details'); score -= 5; }
-  if (!lowerText.includes('summary') && !lowerText.includes('objective')) {
-    improvements.push('Add a professional summary section');
-  }
-  if (!lowerText.includes('certificate') && !lowerText.includes('certification')) {
-    improvements.push('Add relevant certifications');
-  }
-
-  const companyKeywords = {
-    'Google': ['algorithm', 'data structure', 'system design', 'scalable', 'open source'],
-    'Amazon': ['leadership', 'customer', 'ownership', 'deliver', 'metrics'],
-    'Microsoft': ['azure', 'cloud', 'collaboration', 'agile', 'product'],
-    'TCS': ['java', 'python', 'communication', 'team', 'client'],
-    'Infosys': ['agile', 'java', 'communication', 'analytical', 'problem solving'],
-  };
-
-  const keywords = companyKeywords[company] || ['communication', 'teamwork', 'problem solving'];
-  const missing = keywords.filter(k => !lowerText.includes(k));
-  if (missing.length > 0) {
-    improvements.push(`Add ${company}-specific keywords: ${missing.slice(0,3).join(', ')}`);
-    companyTips.push(`${company} values: ${keywords.slice(0,3).join(', ')}`);
-  }
-  companyTips.push(`Tailor your resume specifically for ${company}'s job description`);
-  companyTips.push(`Research ${company}'s culture and reflect it in your resume`);
-
-  if (strengths.length === 0) strengths.push('Resume has basic structure');
-  if (improvements.length === 0) improvements.push('Keep updating with new achievements');
-
-  return {
-    score: Math.min(100, Math.max(30, score)),
-    strengths: strengths.slice(0, 4),
-    improvements: improvements.slice(0, 4),
-    companyTips
-  };
-}
-
 router.post('/analyze', verifyToken, upload.single('resume'), async (req, res) => {
   try {
     const { company } = req.body;
@@ -80,7 +28,32 @@ router.post('/analyze', verifyToken, upload.single('resume'), async (req, res) =
     const resumeText = pdfData.text;
 
     const previousResume = await Resume.findOne({ userId: req.userId }).sort({ uploadedAt: -1 });
-    const analysis = analyzeResume(resumeText, company);
+
+    let prompt = `You are an expert resume analyzer for Indian students. Analyze this resume for a ${company} job application.
+
+Resume:
+${resumeText.substring(0, 3000)}
+
+${previousResume ? `Previous analysis score was ${previousResume.score}/100. Previous improvements needed: ${previousResume.improvements.join(', ')}` : ''}
+
+Respond ONLY with this exact JSON format, no other text:
+{
+  "score": 75,
+  "strengths": ["strength 1", "strength 2", "strength 3"],
+  "improvements": ["improvement 1", "improvement 2", "improvement 3"],
+  "companyTips": ["tip 1 for ${company}", "tip 2 for ${company}"],
+  "comparison": "${previousResume ? 'comparison with previous resume' : 'first upload'}"
+}`;
+
+    const chatCompletion = await groq.chat.completions.create({
+      messages: [{ role: 'user', content: prompt }],
+      model: 'llama-3.3-70b-versatile',
+      temperature: 0.3,
+    });
+
+    const text = chatCompletion.choices[0].message.content;
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    const analysis = JSON.parse(jsonMatch[0]);
 
     const resumeRecord = new Resume({
       userId: req.userId,
@@ -106,8 +79,58 @@ router.post('/analyze', verifyToken, upload.single('resume'), async (req, res) =
     });
 
   } catch (err) {
-    console.error('ERROR:', err);
-    res.status(500).json({ message: 'Analysis failed!', error: err.message });
+    console.error('FULL ERROR MESSAGE:', err.message);
+    console.error('FULL ERROR:', err);
+    res.status(500).json({ message: err.message, error: err.message });
+  }
+});
+
+router.post('/mentor-chat', verifyToken, async (req, res) => {
+  const { mentorName, mentorInfo, userMessage } = req.body;
+  try {
+    const response = await groq.chat.completions.create({
+      messages: [
+        {
+          role: 'system',
+          content: `You are an AI assistant for mentor ${mentorName}. Background: ${mentorInfo}. Answer briefly and motivatingly for Indian college students.`
+        },
+        { role: 'user', content: userMessage }
+      ],
+      model: 'llama-3.3-70b-versatile',
+      temperature: 0.5,
+    });
+    res.json({ reply: response.choices[0].message.content });
+  } catch (err) {
+    res.status(500).json({ message: 'AI error' });
+  }
+});
+
+router.post('/doubt-solver', async (req, res) => {
+  const { userMessage, resumeContext } = req.body;
+  try {
+    const systemPrompt = `You are CampBot, a friendly and intelligent AI assistant like ChatGPT. You can answer ANYTHING — general knowledge, science, history, jokes, fun facts, coding, math, movies, sports, nonsense questions, creative writing, placement prep, DSA problems, career guidance, or anything else. Be conversational, warm and engaging. Never say you cannot answer — always try your best.${resumeContext ? `\nStudent Resume:\n${resumeContext}\nAlso give personalized suggestions based on this resume when relevant.` : ''} Keep answers concise and helpful.`;
+
+    const response = await groq.chat.completions.create({
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userMessage }
+      ],
+      model: 'llama-3.3-70b-versatile',
+      temperature: 0.7,
+    });
+    res.json({ reply: response.choices[0].message.content });
+  } catch (err) {
+    res.status(500).json({ message: 'AI error' });
+  }
+});
+router.get('/history', verifyToken, async (req, res) => {
+  try {
+    const history = await Resume.find({ userId: req.userId })
+      .sort({ uploadedAt: -1 })
+      .limit(20);
+    res.json({ history });
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching history' });
   }
 });
 
