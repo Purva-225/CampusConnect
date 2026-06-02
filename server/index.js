@@ -20,6 +20,8 @@ app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/resume', resumeRoutes);
+const mentorRoutes = require('./routes/mentor');
+app.use('/api', mentorRoutes);
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
