@@ -4,8 +4,7 @@ function PWAInstall() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showBanner, setShowBanner] = useState(false);
   const [installed, setInstalled] = useState(false);
-  const [notifGranted, setNotifGranted] = useState(false);
-
+  const [, setNotifGranted] = useState(false);
   useEffect(() => {
     // Check if already installed
     if (window.matchMedia('(display-mode: standalone)').matches) {
