@@ -32,7 +32,8 @@ function VoiceBot() {
     { bottom: '20px', right: '20px' },
   ];
 
-  const pageNames = {
+ // eslint-disable-next-line no-unused-vars
+const pageNames = {
     '/': 'Home page', '/prep-hub': 'Prep Hub', '/resume': 'Resume Analyzer',
     '/mentors': 'Mentor Connect', '/doubt-solver': 'Doubt Solver',
     '/roadmap': 'Roadmap', '/login': 'Login', '/register': 'Register'
