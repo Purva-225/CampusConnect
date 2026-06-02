@@ -11,6 +11,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+const rateLimit = require('express-rate-limit');
+app.use('/api/', rateLimit({ 
+  windowMs: 15 * 60 * 1000, 
+  max: 100,
+  message: { error: 'Too many requests, please try again later.' }
+}));
+
 app.get('/', (req, res) => {
   res.json({ message: 'CampusConnect API is running!' });
 });

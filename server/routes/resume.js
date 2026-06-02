@@ -134,4 +134,6 @@ router.get('/history', verifyToken, async (req, res) => {
   }
 });
 
+historyRoute.js
+
 module.exports = router;
