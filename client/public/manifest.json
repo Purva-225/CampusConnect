@@ -1,6 +1,7 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "CampusConnect",
+  "name": "CampusConnect - AI Placement Companion",
+  "description": "Your AI-powered placement companion for Indian college students",
   "icons": [
     {
       "src": "favicon.ico",
@@ -10,16 +11,55 @@
     {
       "src": "logo192.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "any maskable"
     },
     {
       "src": "logo512.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "purpose": "any maskable"
     }
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "orientation": "portrait",
+  "theme_color": "#4ade80",
+  "background_color": "#0f172a",
+  "categories": ["education", "productivity"],
+  "lang": "en-IN",
+  "scope": "/",
+  "prefer_related_applications": false,
+  "screenshots": [
+    {
+      "src": "screenshot1.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "CampusConnect Home"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Resume Analyzer",
+      "short_name": "Resume",
+      "description": "Analyze your resume with AI",
+      "url": "/resume",
+      "icons": [{ "src": "logo192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Doubt Solver",
+      "short_name": "Doubts",
+      "description": "Ask AI anything",
+      "url": "/doubt-solver",
+      "icons": [{ "src": "logo192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Prep Hub",
+      "short_name": "Prep",
+      "description": "DSA and placement questions",
+      "url": "/prep-hub",
+      "icons": [{ "src": "logo192.png", "sizes": "192x192" }]
+    }
+  ]
 }

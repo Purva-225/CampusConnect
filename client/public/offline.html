@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CampusConnect - Offline</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background-color: #0f172a;
+      color: white;
+      font-family: system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+    }
+    .logo { font-size: 3rem; margin-bottom: 16px; }
+    h1 { color: #4ade80; font-size: 1.8rem; margin-bottom: 12px; }
+    p { color: #94a3b8; font-size: 1rem; margin-bottom: 8px; line-height: 1.6; }
+    .btn {
+      margin-top: 24px;
+      background-color: #4ade80;
+      color: #111827;
+      padding: 12px 28px;
+      border-radius: 10px;
+      border: none;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .tip {
+      margin-top: 32px;
+      background-color: #1e293b;
+      border-radius: 12px;
+      padding: 16px 24px;
+      max-width: 400px;
+      border: 1px solid #334155;
+    }
+    .tip h3 { color: #4ade80; margin-bottom: 8px; font-size: 0.95rem; }
+    .tip p { font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <div class="logo">🎓</div>
+  <h1>You're Offline</h1>
+  <p>CampusConnect needs internet to load.</p>
+  <p>Check your connection and try again!</p>
+  <button class="btn" onclick="window.location.reload()">🔄 Try Again</button>
+  <div class="tip">
+    <h3>💡 Study Tip while you wait:</h3>
+    <p id="tip">Two Sum: Use a HashMap to store complements. O(n) time, O(n) space.</p>
+  </div>
+  <script>
+    const tips = [
+      "Two Sum: Use HashMap for O(n) solution instead of O(n²) brute force.",
+      "Tell me about yourself: Keep it 60-90 seconds. Present → Past → Future.",
+      "Binary Search: Always check mid = lo + (hi-lo)/2 to avoid overflow.",
+      "System Design: Start with requirements, then scale step by step.",
+      "LRU Cache: Use LinkedHashMap in Java or OrderedDict in Python.",
+      "Merge Sort: Divide and conquer, O(n log n) guaranteed.",
+      "HR Tip: Always ask 2-3 thoughtful questions at interview end.",
+    ];
+    document.getElementById('tip').textContent = tips[Math.floor(Math.random() * tips.length)];
+  </script>
+</body>
+</html>
