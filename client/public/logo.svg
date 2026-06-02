@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" width="200" height="60">
+  <polygon points="30,2 52,13 52,35 30,46 8,35 8,13" fill="#0f2e1a" stroke="#4ade80" stroke-width="2.5"/>
+  <polygon points="30,9 46,18 46,32 30,41 14,32 14,18" fill="none" stroke="#4ade8033" stroke-width="1"/>
+  <rect x="18" y="27" width="24" height="5" rx="1.5" fill="#4ade80"/>
+  <rect x="23" y="17" width="14" height="13" rx="2" fill="#4ade80" transform="rotate(45 30 23.5)"/>
+  <rect x="26" y="20" width="6" height="6" rx="1" fill="#0f2e1a" opacity="0.35" transform="rotate(45 29 23)"/>
+  <line x1="30" y1="32" x2="30" y2="39" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="30" cy="42" r="2.5" fill="#4ade80"/>
+  <text x="62" y="28" font-family="system-ui,-apple-system,sans-serif" font-size="18" font-weight="700" fill="#4ade80" letter-spacing="-0.5">Campus</text>
+  <text x="62" y="46" font-family="system-ui,-apple-system,sans-serif" font-size="13" font-weight="300" fill="#94a3b8" letter-spacing="3">Connect</text>
+</svg>
