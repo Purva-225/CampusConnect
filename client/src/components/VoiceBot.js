@@ -352,8 +352,8 @@ const pageNames = {
       />
 
       {/* Full screen glow - like Siri */}
-      {glow && (
-        <div style={{
+     {isSpeaking && (
+                <div style={{
           position: 'fixed', inset: 0, zIndex: 9990, pointerEvents: 'none',
           backgroundColor: glowColors[glowIdx],
           transition: 'background-color 0.6s ease',
