@@ -85,7 +85,7 @@ Respond ONLY with this exact JSON format, no other text:
   }
 });
 
-router.post('/mentor-chat', async (req, res) => {
+router.post('/mentor-chat', verifyToken, async (req, res) => {
   const { mentorName, mentorInfo, userMessage } = req.body;
   try {
     const response = await groq.chat.completions.create({
@@ -121,6 +121,16 @@ router.post('/doubt-solver', async (req, res) => {
     res.json({ reply: response.choices[0].message.content });
   } catch (err) {
     res.status(500).json({ message: 'AI error' });
+  }
+});
+router.get('/history', verifyToken, async (req, res) => {
+  try {
+    const history = await Resume.find({ userId: req.userId })
+      .sort({ uploadedAt: -1 })
+      .limit(20);
+    res.json({ history });
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching history' });
   }
 });
 
