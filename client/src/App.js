@@ -6,6 +6,7 @@ import Resume from './pages/Resume';
 import Mentors from './pages/Mentors';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import AboutUs from './pages/AboutUs';
 
 function AnimatedBackground() {
   const canvasRef = useRef(null);
@@ -85,6 +86,7 @@ function App() {
             <li><Link to="/prep-hub" style={{color: 'white', textDecoration: 'none'}}>Prep Hub</Link></li>
             <li><Link to="/resume" style={{color: 'white', textDecoration: 'none'}}>Resume</Link></li>
             <li><Link to="/mentors" style={{color: 'white', textDecoration: 'none'}}>Mentors</Link></li>
+            <li><Link to="/about" style={{color: '#94a3b8', textDecoration: 'none'}}>About</Link></li>
             <li><Link to="/login" style={{color: '#4ade80', textDecoration: 'none', fontWeight: 'bold'}}>Login</Link></li>
           </ul>
         </nav>
@@ -98,6 +100,7 @@ function App() {
             <Route path="/mentors" element={<Mentors />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/about" element={<AboutUs />} />
           </Routes>
         </div>
 
