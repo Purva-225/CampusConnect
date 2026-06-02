@@ -9,6 +9,7 @@ import Register from './pages/Register';
 import DoubtSolver from './pages/DoubtSolver';
 import VoiceBot from './components/VoiceBot';
 import Roadmap from './pages/Roadmap';
+import PWAInstall from './components/PWAInstall';
 
 function AnimatedBackground() {
   const canvasRef = useRef(null);
@@ -111,8 +112,10 @@ function App() {
           <p style={{marginTop: '16px', fontSize: '0.8rem'}}>© 2026 CampusConnect. Open Source under MIT License.</p>
         </footer>
         <VoiceBot />
+          <PWAInstall />
       </div>
     </BrowserRouter>
+  
   );
 }
 
