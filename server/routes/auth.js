@@ -8,7 +8,14 @@ const User = require('../models/User');
 router.post('/register', async (req, res) => {
   try {
     const { name, email, password, college } = req.body;
-    
+
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: 'Name, email, and password are required' });
+    }
+    if (password.length < 6) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters' });
+    }
+
     // Check if user exists
     const existing = await User.findOne({ email });
     if (existing) return res.status(400).json({ message: 'Email already registered!' });
@@ -44,6 +51,28 @@ router.post('/login', async (req, res) => {
 
     res.json({ token, user: { name: user.name, email: user.email, college: user.college } });
   } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Get Profile (protected)
+router.get('/profile', async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ message: 'No token provided' });
+    }
+
+    const token = authHeader.split(' ')[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id).select('-password');
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    res.json({ user });
+  } catch (err) {
+    if (err.name === 'JsonWebTokenError' || err.name === 'TokenExpiredError') {
+      return res.status(401).json({ message: 'Invalid or expired token' });
+    }
     res.status(500).json({ message: 'Server error' });
   }
 });
