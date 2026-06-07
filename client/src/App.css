@@ -1,38 +1,23 @@
-.App {
-  text-align: center;
+/* ===== Mobile Responsiveness Fix — paste at top of App.css ===== */
+
+/* Kill horizontal overflow at root (fixes white space + edges) */
+html, body, #root {
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Media never overflows */
+img, video, canvas, svg, iframe {
+  max-width: 100%;
+  height: auto;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* Background / constellation: pin to viewport, not fixed width */
+canvas, .bg-canvas, .particles, .constellation {
+  max-width: 100vw;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+/* Flex items must be allowed to shrink (stops banner/card overflow) */
+* { min-width: 0; }
