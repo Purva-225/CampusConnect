@@ -5,6 +5,7 @@ function PWAInstall() {
   const [showBanner, setShowBanner] = useState(false);
   const [installed, setInstalled] = useState(false);
   const [, setNotifGranted] = useState(false);
+
   useEffect(() => {
     // Check if already installed
     if (window.matchMedia('(display-mode: standalone)').matches) {
@@ -25,7 +26,6 @@ function PWAInstall() {
     const handler = (e) => {
       e.preventDefault();
       setDeferredPrompt(e);
-      // Show banner after 10 seconds
       setTimeout(() => setShowBanner(true), 10000);
     };
     window.addEventListener('beforeinstallprompt', handler);
@@ -45,7 +45,6 @@ function PWAInstall() {
     if (outcome === 'accepted') {
       setInstalled(true);
       setShowBanner(false);
-      // Request notifications after install
       requestNotifications();
     }
     setDeferredPrompt(null);
@@ -70,14 +69,24 @@ function PWAInstall() {
     <div style={{
       position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 10000,
       backgroundColor: '#0f172a', borderTop: '2px solid #4ade80',
-      padding: '16px 20px',
+      padding: '14px 16px',
+      // ⬇️ mobile-safe additions
+      boxSizing: 'border-box',
+      width: '100%',
+      maxWidth: '100vw',
+      overflowX: 'hidden',
+      paddingBottom: 'calc(14px + env(safe-area-inset-bottom))',
+      // ⬇️ layout
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       gap: '12px', flexWrap: 'wrap',
       boxShadow: '0 -4px 24px rgba(74,222,128,0.2)'
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-        <span style={{ fontSize: '2rem' }}>🎓</span>
-        <div>
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: '12px',
+        flex: '1 1 200px', minWidth: 0   // lets text shrink instead of pushing width
+      }}>
+        <span style={{ fontSize: '1.8rem', flexShrink: 0 }}>🎓</span>
+        <div style={{ minWidth: 0 }}>
           <div style={{ color: '#4ade80', fontWeight: 'bold', fontSize: '0.95rem' }}>
             Install CampusConnect App
           </div>
@@ -86,15 +95,18 @@ function PWAInstall() {
           </div>
         </div>
       </div>
-      <div style={{ display: 'flex', gap: '10px' }}>
+      <div style={{
+        display: 'flex', gap: '10px',
+        flex: '0 0 auto', flexWrap: 'wrap'
+      }}>
         <button
           onClick={handleInstall}
-          style={{ backgroundColor: '#4ade80', color: '#111827', padding: '10px 20px', borderRadius: '10px', border: 'none', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.9rem' }}>
+          style={{ backgroundColor: '#4ade80', color: '#111827', padding: '10px 18px', borderRadius: '10px', border: 'none', fontWeight: 'bold', cursor: 'pointer', fontSize: '0.9rem', whiteSpace: 'nowrap' }}>
           📱 Install App
         </button>
         <button
           onClick={() => setShowBanner(false)}
-          style={{ backgroundColor: '#1e293b', color: '#94a3b8', padding: '10px 16px', borderRadius: '10px', border: '1px solid #334155', cursor: 'pointer', fontSize: '0.9rem' }}>
+          style={{ backgroundColor: '#1e293b', color: '#94a3b8', padding: '10px 14px', borderRadius: '10px', border: '1px solid #334155', cursor: 'pointer', fontSize: '0.9rem', whiteSpace: 'nowrap' }}>
           Not now
         </button>
       </div>

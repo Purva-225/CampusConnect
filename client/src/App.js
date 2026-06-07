@@ -31,8 +31,16 @@ function AnimatedBackground() {
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+
+    // Size the bitmap to the canvas's actual CSS box (= viewport),
+    // NEVER to window.innerWidth. This stops the canvas from ever
+    // being wider than the screen (the real overflow cause).
+    const setSize = () => {
+      canvas.width = canvas.clientWidth;
+      canvas.height = canvas.clientHeight;
+    };
+    setSize();
+
     const particles = [];
     for (let i = 0; i < 100; i++) {
       particles.push({
@@ -42,6 +50,8 @@ function AnimatedBackground() {
         opacity: Math.random() * 0.5 + 0.2
       });
     }
+
+    let raf;
     function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.forEach(p => {
@@ -63,14 +73,32 @@ function AnimatedBackground() {
           }
         });
       });
-      requestAnimationFrame(animate);
+      raf = requestAnimationFrame(animate);
     }
     animate();
-    const handleResize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
+
+    const handleResize = () => setSize();
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      cancelAnimationFrame(raf);
+    };
   }, []);
-  return <canvas ref={canvasRef} style={{ position: 'fixed', top: 0, left: 0, zIndex: 0, pointerEvents: 'none' }}/>;
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: 'fixed',
+        inset: 0,            // top/right/bottom/left: 0
+        width: '100%',       // locked to viewport — can't overflow
+        height: '100%',
+        maxWidth: '100vw',
+        zIndex: 0,
+        pointerEvents: 'none'
+      }}
+    />
+  );
 }
 
 function Navbar() {
@@ -99,7 +127,7 @@ function Navbar() {
   ];
 
   return (
-    <nav style={{ position: 'relative', zIndex: 10, backgroundColor: 'rgba(17, 24, 39, 0.95)', color: 'white', padding: '16px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backdropFilter: 'blur(10px)' }}>
+    <nav style={{ position: 'relative', zIndex: 10, backgroundColor: 'rgba(17, 24, 39, 0.95)', color: 'white', padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backdropFilter: 'blur(10px)', boxSizing: 'border-box', maxWidth: '100vw' }}>
       <Link to="/" style={{ color: '#4ade80', fontSize: '1.5rem', fontWeight: 'bold', textDecoration: 'none' }}>CampusConnect</Link>
 
       {/* Desktop navbar */}
@@ -125,7 +153,7 @@ function Navbar() {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, backgroundColor: 'rgba(17,24,39,0.98)', padding: '16px 32px', display: 'flex', flexDirection: 'column', gap: '12px', zIndex: 100, borderBottom: '1px solid #334155' }}>
+        <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, backgroundColor: 'rgba(17,24,39,0.98)', padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '12px', zIndex: 100, borderBottom: '1px solid #334155', boxSizing: 'border-box' }}>
           {navLinks.map(link => (
             <Link key={link.to} to={link.to} onClick={() => setMenuOpen(false)} style={{ color: 'white', textDecoration: 'none', fontSize: '1rem', padding: '8px 0', borderBottom: '1px solid #1e293b' }}>{link.label}</Link>
           ))}
@@ -153,10 +181,10 @@ function Navbar() {
 function App() {
   return (
     <BrowserRouter>
-      <div style={{ backgroundColor: '#0f172a', minHeight: '100vh' }}>
+      <div style={{ backgroundColor: '#0f172a', minHeight: '100vh', overflowX: 'hidden', maxWidth: '100vw' }}>
         <AnimatedBackground />
         <Navbar />
-        <div style={{ position: 'relative', zIndex: 1 }}>
+        <div style={{ position: 'relative', zIndex: 1, overflowX: 'hidden' }}>
           <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<Home />} />

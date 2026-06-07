@@ -134,6 +134,15 @@ router.get('/history', verifyToken, async (req, res) => {
   }
 });
 
-historyRoute.js
+router.get('/history', verifyToken, async (req, res) => {
+  try {
+    const history = await Resume.find({ userId: req.userId })
+      .sort({ uploadedAt: -1 })
+      .limit(20);
+    res.json({ history });
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching history' });
+  }
+});
 
 module.exports = router;
