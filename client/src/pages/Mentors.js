@@ -156,7 +156,7 @@ setMessages([...newMessages, { role: 'assistant', text: data.reply }]);
       <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#4ade80' }}>Senior Mentor Connect</h1>
       <p style={{ color: '#94a3b8', marginTop: '8px', marginBottom: '40px' }}>Connect with placed seniors for guidance and resume reviews</p>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px', maxWidth: '1100px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '24px', maxWidth: '1100px' }}>
         {mentors.map((mentor, index) => (
           <div key={index} style={{ backgroundColor: '#1e293b', borderRadius: '16px', padding: '24px', border: mentor.available ? '1px solid #4ade80' : '1px solid #374151' }}>
             <div style={{ width: '60px', height: '60px', borderRadius: '50%', backgroundColor: '#4ade80', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', fontWeight: 'bold', color: '#111827' }}>
@@ -179,7 +179,7 @@ setMessages([...newMessages, { role: 'assistant', text: data.reply }]);
 
       {selectedMentor && (
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.75)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-          <div style={{ backgroundColor: '#1e293b', borderRadius: '20px', padding: '32px', width: '500px', maxWidth: '92%', border: '1px solid #4ade80', maxHeight: '90vh', overflowY: 'auto' }}>
+          <div style={{ backgroundColor: '#1e293b', borderRadius: '20px', padding: '32px', width: '92%', maxWidth: '500px', border: '1px solid #4ade80', maxHeight: '90vh', overflowY: 'auto' }}>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>

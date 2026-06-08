@@ -64,7 +64,7 @@ function Dashboard() {
       </div>
 
       {/* Stats Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '32px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))', gap: '16px', marginBottom: '32px' }}>
         {[
           { icon: '📄', label: 'Resumes Analyzed', value: resumeHistory.length, color: '#4ade80' },
           { icon: '📈', label: 'Best Score', value: resumeHistory.length ? Math.max(...resumeHistory.map(r => r.score)) + '/100' : 'N/A', color: '#fbbf24' },

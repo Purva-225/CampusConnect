@@ -131,7 +131,7 @@ function Roadmap() {
       {/* Hiring Timeline */}
       <div style={{ backgroundColor: '#1e293b', borderRadius: '16px', padding: '24px', marginBottom: '32px', border: '1px solid #334155' }}>
         <h3 style={{ color: '#4ade80', marginBottom: '16px', fontSize: '1.1rem' }}>📅 India Hiring Calendar 2026</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))', gap: '12px' }}>
           {hiringMonths.map((m, i) => (
             <div key={i} style={{ backgroundColor: '#0f172a', borderRadius: '10px', padding: '12px', border: `1px solid ${m.type === 'peak' ? '#4ade8044' : m.type === 'slow' ? '#ef444444' : '#33415544'}` }}>
               <div style={{ color: m.type === 'peak' ? '#4ade80' : m.type === 'slow' ? '#ef4444' : '#94a3b8', fontWeight: 'bold', fontSize: '0.9rem', marginBottom: '4px' }}>{m.month}</div>
@@ -165,7 +165,7 @@ function Roadmap() {
               </button>
             ))}
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '16px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 340px), 1fr))', gap: '16px' }}>
             {contests
               .filter(c => activeFilter === 'All' || c.platform === activeFilter || c.tag === activeFilter)
               .map((c, i) => (
@@ -201,7 +201,7 @@ function Roadmap() {
               </button>
             ))}
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '16px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 340px), 1fr))', gap: '16px' }}>
             {openSource
               .filter(o => activeFilter === 'All' || o.tag === activeFilter || (activeFilter === 'Beginner Friendly' && o.level.includes('Beginner')))
               .map((o, i) => (
@@ -248,7 +248,7 @@ function Roadmap() {
                 </a>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '14px', marginBottom: '14px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: '14px', marginBottom: '14px' }}>
                 {/* Internship */}
                 <div style={{ backgroundColor: '#0f172a', borderRadius: '10px', padding: '14px', border: '1px solid #166534' }}>
                   <div style={{ color: '#4ade80', fontWeight: 'bold', fontSize: '0.85rem', marginBottom: '8px' }}>🎓 Internship</div>
