@@ -1,59 +1,57 @@
-const CACHE_NAME = 'campusconnect-v1';
-const STATIC_CACHE = 'campusconnect-static-v1';
-const API_CACHE = 'campusconnect-api-v1';
+const STATIC_CACHE = 'campusconnect-static-v2';
+const API_CACHE = 'campusconnect-api-v2';
 
-// Files to cache for offline use
-const STATIC_FILES = [
-  '/',
-  '/index.html',
-  '/static/js/main.chunk.js',
-  '/static/js/bundle.js',
-  '/manifest.json',
-  '/logo192.png',
-  '/offline.html'
-];
+// Sirf chhoti static cheezein precache (NO index.html, NO js bundles)
+const PRECACHE = ['/offline.html', '/manifest.json', '/logo192.png'];
 
-// Install - cache static files
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(STATIC_CACHE).then((cache) => {
-      return cache.addAll(STATIC_FILES).catch(() => {
-        // Some files might not exist yet, that's ok
-        return Promise.resolve();
-      });
-    })
+    caches.open(STATIC_CACHE).then((cache) => cache.addAll(PRECACHE).catch(() => {}))
   );
   self.skipWaiting();
 });
 
-// Activate - clean old caches
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(
-        keys
-          .filter((key) => key !== STATIC_CACHE && key !== API_CACHE)
-          .map((key) => caches.delete(key))
+    caches.keys()
+      .then((keys) =>
+        Promise.all(
+          keys
+            .filter((k) => k !== STATIC_CACHE && k !== API_CACHE)
+            .map((k) => caches.delete(k))   // purane v1 caches delete
+        )
       )
-    )
+      .then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
-// Fetch - serve from cache, fallback to network
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // API calls - network first, cache fallback
+  // 1) PAGE / navigation -> NETWORK FIRST (hamesha latest HTML + latest bundles)
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          const cloned = response.clone();
+          caches.open(STATIC_CACHE).then((c) => c.put(request, cloned));
+          return response;
+        })
+        .catch(() =>
+          caches.match(request).then((c) => c || caches.match('/offline.html'))
+        )
+    );
+    return;
+  }
+
+  // 2) API calls -> network first, cache fallback
   if (url.hostname.includes('onrender.com') || url.pathname.includes('/api/')) {
     event.respondWith(
       fetch(request)
         .then((response) => {
           const cloned = response.clone();
-          caches.open(API_CACHE).then((cache) => {
-            cache.put(request, cloned);
-          });
+          caches.open(API_CACHE).then((c) => c.put(request, cloned));
           return response;
         })
         .catch(() => caches.match(request))
@@ -61,31 +59,22 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Static files - cache first, network fallback
+  // 3) Hashed JS/CSS/images -> cache first (har deploy pe naya hash, toh safe)
   event.respondWith(
     caches.match(request).then((cached) => {
       if (cached) return cached;
-      return fetch(request)
-        .then((response) => {
-          if (response.status === 200) {
-            const cloned = response.clone();
-            caches.open(STATIC_CACHE).then((cache) => {
-              cache.put(request, cloned);
-            });
-          }
-          return response;
-        })
-        .catch(() => {
-          // Return offline page for navigation requests
-          if (request.mode === 'navigate') {
-            return caches.match('/offline.html') || caches.match('/index.html');
-          }
-        });
+      return fetch(request).then((response) => {
+        if (response.status === 200 && request.method === 'GET') {
+          const cloned = response.clone();
+          caches.open(STATIC_CACHE).then((c) => c.put(request, cloned));
+        }
+        return response;
+      });
     })
   );
 });
 
-// Push notifications
+// Push notifications (same as before)
 self.addEventListener('push', (event) => {
   const data = event.data ? event.data.json() : {};
   const options = {
@@ -100,19 +89,13 @@ self.addEventListener('push', (event) => {
     ]
   };
   event.waitUntil(
-    self.registration.showNotification(
-      data.title || 'CampusConnect 🎓',
-      options
-    )
+    self.registration.showNotification(data.title || 'CampusConnect 🎓', options)
   );
 });
 
-// Notification click
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   if (event.action === 'open' || !event.action) {
-    event.waitUntil(
-      clients.openWindow(event.notification.data.url || '/')
-    );
+    event.waitUntil(clients.openWindow(event.notification.data.url || '/'));
   }
 });
