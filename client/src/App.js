@@ -10,6 +10,7 @@ const Resume = lazy(() => import('./pages/Resume'));
 const Mentors = lazy(() => import('./pages/Mentors'));
 const Login = lazy(() => import('./pages/Login'));
 const Register = lazy(() => import('./pages/Register'));
+const AboutUs = lazy(() => import('./pages/AboutUs'));
 const DoubtSolver = lazy(() => import('./pages/DoubtSolver'));
 const Roadmap = lazy(() => import('./pages/Roadmap'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
@@ -122,6 +123,7 @@ function Navbar() {
     { to: '/prep-hub', label: 'Prep Hub' },
     { to: '/resume', label: 'Resume' },
     { to: '/mentors', label: 'Mentors' },
+    { to: '/about', label: 'About' },
     { to: '/roadmap', label: 'Roadmap' },
     { to: '/doubt-solver', label: 'Doubt Solver' },
   ];
@@ -191,6 +193,7 @@ function App() {
               <Route path="/prep-hub" element={<PrepHub />} />
               <Route path="/resume" element={<Resume />} />
               <Route path="/mentors" element={<Mentors />} />
+              <Route path="/about" element={<AboutUs />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/doubt-solver" element={<DoubtSolver />} />
