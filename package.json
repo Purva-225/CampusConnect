@@ -1,0 +1,26 @@
+{
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "mongoose": "^9.6.3"
+  },
+  "name": "campusconnect",
+  "version": "1.0.0",
+  "description": "[![Live Demo](https://img.shields.io/badge/Live-Demo-green?style=for-the-badge)](https://campus-connect-xi-self.vercel.app)\r [![GSSoC 2026](https://img.shields.io/badge/GSSoC-2026-orange?style=for-the-badge)](https://gssoc.girlscript.tech/)\r [![License: MIT](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ariesshadow/CampusConnect.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ariesshadow/CampusConnect/issues"
+  },
+  "homepage": "https://github.com/ariesshadow/CampusConnect#readme"
+}
