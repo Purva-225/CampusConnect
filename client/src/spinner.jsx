@@ -1,5 +1,5 @@
 // LoadingSpinner.jsx
-export default function LoadingSpinner({
+export default function Spinner({
   size = "h-12 w-12",
   color = "border-blue-500",
   overlay = false,
