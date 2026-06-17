@@ -1,3 +1,6 @@
+import { Link } from "react-router-dom";
+import { Github, Linkedin, Twitter } from "lucide-react";
+
 const Footer = () => {
   return (
     <footer className="bg-gray-900 text-gray-300 py-12 px-6 mt-auto">
@@ -13,19 +16,19 @@ const Footer = () => {
         <div>
           <h3 className="text-white font-semibold mb-4 text-lg">Quick Links</h3>
           <ul className="space-y-2 text-sm">
-            <li><a href="/" className="hover:text-white transition-colors duration-200 hover:underline">Home</a></li>
-            <li><a href="/prep" className="hover:text-white transition-colors duration-200 hover:underline">Prep Hub</a></li>
-            <li><a href="/experiences" className="hover:text-white transition-colors duration-200 hover:underline">Experiences</a></li>
-            <li><a href="/about" className="hover:text-white transition-colors duration-200 hover:underline">About</a></li>
+            <li><Link to="/" className="hover:text-white transition-colors duration-200 hover:underline">Home</Link></li>
+            <li><Link to="/prep" className="hover:text-white transition-colors duration-200 hover:underline">Prep Hub</Link></li>
+            <li><Link to="/experiences" className="hover:text-white transition-colors duration-200 hover:underline">Experiences</Link></li>
+            <li><Link to="/about" className="hover:text-white transition-colors duration-200 hover:underline">About</Link></li>
           </ul>
         </div>
 
         <div>
           <h3 className="text-white font-semibold mb-4 text-lg">Connect With Us</h3>
-          <div className="flex space-x-6 text-sm">
-            <a href="https://github.com" target="_blank" rel="noreferrer" className="hover:text-white transition-colors duration-200">GitHub</a>
-            <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="hover:text-white transition-colors duration-200">LinkedIn</a>
-            <a href="https://twitter.com" target="_blank" rel="noreferrer" className="hover:text-white transition-colors duration-200">Twitter</a>
+          <div className="flex space-x-5">
+            <a href="https://github.com/Purva-225/CampusConnect" target="_blank" rel="noreferrer" aria-label="GitHub" className="text-gray-400 hover:text-white transition-colors duration-200 hover:scale-110 inline-block"><Github size={22} /></a>
+            <a href="https://linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn" className="text-gray-400 hover:text-white transition-colors duration-200 hover:scale-110 inline-block"><Linkedin size={22} /></a>
+            <a href="https://twitter.com" target="_blank" rel="noreferrer" aria-label="Twitter" className="text-gray-400 hover:text-white transition-colors duration-200 hover:scale-110 inline-block"><Twitter size={22} /></a>
           </div>
         </div>
 
