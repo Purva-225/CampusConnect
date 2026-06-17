@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Github, Linkedin, Twitter } from "lucide-react";
+import { Github, Linkedin } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -27,8 +27,7 @@ const Footer = () => {
           <h3 className="text-white font-semibold mb-4 text-lg">Connect With Us</h3>
           <div className="flex space-x-5">
             <a href="https://github.com/Purva-225/CampusConnect" target="_blank" rel="noreferrer" aria-label="GitHub" className="text-gray-400 hover:text-white transition-colors duration-200 hover:scale-110 inline-block"><Github size={22} /></a>
-            <a href="https://linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn" className="text-gray-400 hover:text-white transition-colors duration-200 hover:scale-110 inline-block"><Linkedin size={22} /></a>
-            <a href="https://twitter.com" target="_blank" rel="noreferrer" aria-label="Twitter" className="text-gray-400 hover:text-white transition-colors duration-200 hover:scale-110 inline-block"><Twitter size={22} /></a>
+            <a href="https://www.linkedin.com/company/campusconnect-ai-placement/" target="_blank" rel="noreferrer" aria-label="LinkedIn" className="text-gray-400 hover:text-white transition-colors duration-200 hover:scale-110 inline-block"><Linkedin size={22} /></a>
           </div>
         </div>
 
